@@ -19,6 +19,29 @@ app.use(express.urlencoded({extended: true}));
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient();
 
+// add this snippet after "var express = require('express')"
+var axios = require('axios');
+
+app.get('/weather', async (req, res) => {
+
+    try {
+
+      const response = await axios.get('https://api-open.data.gov.sg/v2/real-time/api/twenty-four-hr-forecast');
+
+      res.render('pages/weather', { weather: response.data });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.send('Error fetching weather data');
+
+    }
+
+  });
+
+  ;
+
 // Main landing page
 app.get('/', async function(req, res) {
 
@@ -97,4 +120,10 @@ app.post("/delete/:id", async (req, res) => {
   });
 
 // Tells the app which port to run on
+app.get('/demo', function(req, res) {
+
+  res.render('pages/demo');
+
+});
+
 app.listen(8080);
